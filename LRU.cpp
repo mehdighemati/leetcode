@@ -1,6 +1,3 @@
-#include <unordered_map>
-#include <iostream>
-
 template<typename K, typename V>
 void print_map(std::unordered_map<K, V> const &m)
 {
@@ -39,6 +36,8 @@ public:
     max = capacity;
     head->next = tail;
     tail->prev = head;
+      head->prev = nullptr;
+      tail->next = nullptr;
   }
   
   // DummyHead <-> Node1 <-> Node2 <-> DummyTail
@@ -52,11 +51,15 @@ public:
     else {
       Node* getNode = hm[key];
       Node* newNode = new Node(getNode->key,getNode->value);
+        
       del(getNode);
+        getNode->next = nullptr;
+        getNode->prev = nullptr;
+        delete getNode;
+        hm[newNode->key] = newNode;
       push_back(newNode);
       return newNode->value;
     }
-    print_map(hm);
   }
 
   // DummyHead <-> Node1 <-> DummyTail
@@ -73,6 +76,8 @@ public:
   }
 
   void del(Node* oldNode){
+      
+      
     Node* prevNode = oldNode->prev;
     Node* nextNode = oldNode->next;
     prevNode->next = nextNode;
@@ -94,7 +99,11 @@ public:
     if(hm.count(key) > 0){
       Node *oldNode = hm[key];
       del(oldNode);
-      
+        
+      hm.erase(oldNode->key);
+        oldNode->next = nullptr;
+        oldNode->prev = nullptr;
+        delete oldNode;
       hm[key] = newNode;
       push_back(newNode);
     }
@@ -103,7 +112,12 @@ public:
         //remove the node adjacent to head
         Node* lru = head->next;
         del(lru);
-        hm.erase(lru->key);
+          hm.erase(lru->key);
+          lru->next = nullptr;
+        lru->prev = nullptr;
+          delete lru;
+          
+        
         hm[key] = newNode;
         push_back(newNode);
       }
@@ -115,7 +129,6 @@ public:
         //std::cout << "val of node in hashmap " << hm[key]->value << "\n";
       }
     }
-    print_map(hm);
     //std::cout << "Current size is: " << size << "\n";
   }
 };
