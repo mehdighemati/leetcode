@@ -15,7 +15,7 @@ using namespace std;
 unordered_map<int,int> hm = {};
 int count = 0;
 
-int recurStairs(int n){
+int climbStairs(int n){
   if(n<= 2){
       return n;
   }
@@ -25,8 +25,8 @@ int recurStairs(int n){
     return hm[n];
   }
   else{
-    int leftChain = recurStairs(n-2);
-    int rightChain = recurStairs(n-1);
+    int leftChain = climbStairs(n-2);
+    int rightChain = climbStairs(n-1);
 
     hm[n] = leftChain + rightChain;
 
